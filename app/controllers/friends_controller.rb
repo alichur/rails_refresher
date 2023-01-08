@@ -1,11 +1,12 @@
 class FriendsController < ApplicationController
   before_action :set_friend, only: %i[ show edit update destroy ]
-
+  before_action :authenticate_user!, except: [:index, :show]
+  before_action :correct_user, only: [:edit, :update, :destroy]
   # GET /friends or /friends.json
   def index
+    # @friends = Friend.where(user_id: current_user.id)
     @friends = Friend.all
   end
-
   # GET /friends/1 or /friends/1.json
   def show
   end
@@ -47,8 +48,13 @@ class FriendsController < ApplicationController
     end
   end
 
+  def correct_user
+    @friend = current_user.friends.find_by(id: params[:id])
+    redirect_to friends_path, notice: "Not Authorizzzzed" if @friend.nil?
+  end
   # DELETE /friends/1 or /friends/1.json
   def destroy
+
     @friend.destroy
 
     respond_to do |format|
@@ -65,6 +71,6 @@ class FriendsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def friend_params
-      params.require(:friend).permit(:first_name, :last_name, :email, :phone, :twitter)
+      params.require(:friend).permit(:first_name, :last_name, :email, :phone, :twitter, :user_id)
     end
 end
