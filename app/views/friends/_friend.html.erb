@@ -1,10 +1,9 @@
 <div id="<%= dom_id friend %>">
   <p>
     <strong>Full name:</strong>
-    <%= friend.first_name%>
-    <%= friend.last_name%>
-  </p>
+    <%= link_to friend.first_name + ' ' + friend.last_name, friend%>
 
+  </p>
 
   <p>
     <strong>Email:</strong>
